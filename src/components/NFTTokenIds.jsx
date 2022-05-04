@@ -7,12 +7,14 @@ import {
   FileSearchOutlined,
   ShoppingCartOutlined,
   RightCircleOutlined,
+  ConsoleSqlOutlined,
 } from "@ant-design/icons";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "./AddressInput";
 import { getCollectionsByChain } from "helpers/collections";
 import { useWeb3ExecuteFunction } from "react-moralis";
+import { ethers } from 'ethers';
 const { Meta } = Card;
 
 const styles = {
@@ -39,6 +41,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
   const purchaseItemFunction = "createMarketSale";
   const contractProcessor = useWeb3ExecuteFunction();
   const [nftToBuy, setNftToBuy] = useState();
+  const [price, setPrice] = useState();
   const queryMarketItems = useMoralisQuery("CreatedMarketItems");
   const fetchMarketItems = JSON.parse(
     JSON.stringify(queryMarketItems.data, [
@@ -56,41 +59,45 @@ function NFTTokenIds({ inputValue, setInputValue }) {
   );
 
   async function purchase() {
-    const tokenDetails = getMarketItem(nftToBuy);
+    const tokenDetails = await getBuyData(nftToBuy);
     const itemID = tokenDetails.itemId;
     const tokenPrice = tokenDetails.price;
-    const ops = {
-      contractAddress: marketAddress,
-      functionName: purchaseItemFunction,
-      abi: contractABI,
-      params: {
-        nftContract: nftToBuy.token_address,
-        itemId: itemID,
-      },
-      msgValue: tokenPrice,
-    };
+    console.log("ID:", itemID)
+    console.log("price", tokenPrice)
 
-    await contractProcessor.fetch({
-      params: ops,
-      onSuccess: () => {
-        alert("NFT bought");
-        updateSoldMarketItem();
-      },
-      onError: (error) => {
-        alert(error);
-      },
-    });
-  }
+    await window.ethereum.enable()
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
 
-  async function updateSoldMarketItem() {
-    const id = getMarketItem(nftToBuy).objectId;
-    const marketList = Moralis.Object.extend("CreatedMarketItems");
-    const query = new Moralis.Query(marketList);
-    await query.get(id).then((obj) => {
-      obj.set("sold", true);
-      obj.set("owener", walletAdress);
-      obj.save();
-    });
+    const marketContract = new ethers.Contract(
+      marketAddress,
+      contractABI,
+      signer
+    );
+
+    const options = {value: tokenPrice}
+    const tx = await marketContract.createMarketSale(nftToBuy.token_address, itemID, options);
+
+    // const ops = {
+    //   contractAddress: marketAddress,
+    //   functionName: purchaseItemFunction,
+    //   abi: contractABI,
+    //   params: {
+    //     nftContract: nftToBuy.token_address,
+    //     itemId: itemID,
+    //   },
+    //   msgValue: tokenPrice,
+    // };
+
+    // await contractProcessor.fetch({
+    //   params: ops,
+    //   onSuccess: () => {
+    //     alert("NFT bought");
+    //   },
+    //   onError: (error) => {
+    //     alert(error);
+    //   },
+    // });
   }
 
   async function transfer(nft, amount, receiver) {
@@ -126,6 +133,50 @@ function NFTTokenIds({ inputValue, setInputValue }) {
     setNftToBuy(nft);
     setVisibility(true);
   };
+
+  async function getData(nft) {
+    const provider = new ethers.providers.JsonRpcProvider(
+      'https://speedy-nodes-nyc.moralis.io/74bc5da2f2b08db9a7b1b167/eth/rinkeby'
+    )
+
+    const marketContract = new ethers.Contract(
+      marketAddress,
+      contractABI,
+      provider
+    );
+
+    const yer = await marketContract.getMarketItems();
+
+    for(let item of yer) {
+      console.log(nft?.token_id)
+      if(item.nftContract === nft?.token_address ||
+        ethers.utils.formatUnits(item.tokenId,0) === nft?.token_id) {
+           setPrice(ethers.utils.formatEther(item.price));
+           return true;
+         }
+    }
+    setPrice("N/A")
+    return false;
+  }
+
+  async function getBuyData(nft) {
+    const provider = new ethers.providers.JsonRpcProvider(
+      'https://speedy-nodes-nyc.moralis.io/74bc5da2f2b08db9a7b1b167/eth/rinkeby'
+    )
+
+    const marketContract = new ethers.Contract(
+      marketAddress,
+      contractABI,
+      provider
+    );
+
+    const yer = await marketContract.getMarketItems();
+    for(let item of yer) {
+      if(ethers.utils.formatUnits(item.tokenId,0) === nft?.token_id) {
+           return item;
+         }
+    }
+  }
 
   const getMarketItem = (nft) => {
     const result = fetchMarketItems?.find(
@@ -191,7 +242,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
               actions={[
                 <Tooltip title="View This Collection">
                   <RightCircleOutlined
-                    onClick={() => setInputValue(nft.addrs)}
+                    onClick={() => {setInputValue(nft.addrs);}}
                   />
                 </Tooltip>,
               ]}
@@ -211,7 +262,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
             </Card>
           ))}
       </div>
-      {getMarketItem(nftToBuy) ? (
+      {getData(nftToBuy) ? (
         <Modal
           title={`Transfer ${nftToBuy?.name || "NFT"}`}
           visible={visible}
@@ -228,7 +279,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
           >
             <Badge.Ribbon
               text={`${
-                getMarketItem(nftToBuy).price / ("1e" + 18)
+                price// / ("1e" + 18)
               } ${nativeName}`}
               color="green"
             />

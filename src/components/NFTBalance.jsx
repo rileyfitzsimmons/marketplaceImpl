@@ -28,12 +28,42 @@ function NFTBalance() {
   const [visible, setVisibility] = useState(false);
   const [price, setPrice] = useState();
   const [nftToSell, setNftToSell] = useState(null);
+  const [nftToSend, setNftToSend] = useState(null);
+  const [receiverToSend, setReceiver] = useState(null);
+  const [isSale, setIsSale] = useState(true);
   const [isPending, setIsPending] = useState(false);
   const contractProcessor = useWeb3ExecuteFunction();
   const contractABIJson = JSON.parse(contractABI);
   const listItemFunction = "createMarketItem";
+  const approveABI = '[{ "inputs": [ { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "tokenId", "type": "uint256" } ], "name": "approve", "outputs": [], "stateMutability": "nonpayable", "type": "function" }]'
+  const approveABIJson = JSON.parse(approveABI);
+
+  async function approve(nft) {
+    const ops = {
+      contractAddress: nft.token_address,
+      functionName: "approve",
+      abi: approveABIJson,
+      params: {
+        to: marketAddress,
+        tokenId: nftToSell.token_id,
+      }
+    };
+
+    await contractProcessor.fetch({
+      params: ops,
+      onSuccess: () => {
+        return true;
+      },
+      onError: (error) => {
+        console.log(error)
+        alert("Something went wrong: ", error);
+      },
+    });
+  }
 
   async function list(nft, currentPrice) {
+    // const cont = await approve(nft);
+    // if(!cont) return;
     const p = currentPrice * ("1e" + 18);
     const ops = {
       contractAddress: marketAddress,
@@ -43,32 +73,30 @@ function NFTBalance() {
         nftContract: nft.token_address,
         tokenId: nft.token_id,
         price: String(p),
+        category: " ",
       },
     };
 
     await contractProcessor.fetch({
       params: ops,
       onSuccess: () => {
-        alert("item bought");
+        alert("item listed for sale");
         addItemImage();
       },
       onError: (error) => {
-        alert("Something went wrong");
+        alert("Something went wrong: ", error);
       },
     });
   }
 
-  async function transfer(nft, amount, receiver) {
+  async function transfer(nft, receiver) {
+    console.log(nft);
     const options = {
       type: nft.contract_type,
       tokenId: nft.token_id,
       receiver: receiver,
       contractAddress: nft.token_address,
     };
-
-    if (options.type === "erc1155") {
-      options.amount = amount;
-    }
 
     setIsPending(true);
     await Moralis.transfer(options)
@@ -85,6 +113,7 @@ function NFTBalance() {
   const handleSellClick = (nft) => {
     setNftToSell(nft);
     setVisibility(true);
+    setIsSale(true);
   };
 
   function addItemImage() {
@@ -98,6 +127,12 @@ function NFTBalance() {
 
     itemImage.save();
   }
+
+  const handleTransferClick = (nft) => {
+    setNftToSend(nft);
+    setVisibility(true);
+    setIsSale(false);
+  };
 
   return (
     <>
@@ -118,7 +153,7 @@ function NFTBalance() {
                   />
                 </Tooltip>,
                 // <Tooltip title="Transfer NFT">
-                //   <SendOutlined onClick={() => handleTransferClick(nft)} />
+                //   <ShoppingCartOutlined onClick={() => handleTransferClick(nft)} />
                 // </Tooltip>,
                 <Tooltip title="Sell NFT">
                   <ShoppingCartOutlined onClick={() => handleSellClick(nft)} />
@@ -140,30 +175,53 @@ function NFTBalance() {
             </Card>
           ))}
       </div>
-      <Modal
-        title={`Transfer ${nftToSell?.name || "NFT"}`}
-        visible={visible}
-        onCancel={() => setVisibility(false)}
-        onOk={() => list(nftToSell, price)}
-        confirmLoading={isPending}
-        okText="Sell"
-      >
-        <img
-          src={nftToSell?.image}
-          alt=""
-          style={{
-            width: "250px",
-            margin: "auto",
-            borderRadius: "10px",
-            marginBottom: "15px",
-          }}
-        />
-        <Input
-          autoFocus
-          placeholder="Set Price in MATIC"
-          onChange={(e) => setPrice(e.target.value)}
-        />
-      </Modal>
+      { isSale ? (
+        <Modal
+          title={`Selll ${nftToSell?.name || "NFT"}`}
+          visible={visible}
+          onCancel={() => setVisibility(false)}
+          onOk={() => list(nftToSell, price)}
+          confirmLoading={isPending}
+          okText="Sell"
+        >
+          <img
+            src={nftToSell?.image}
+            alt=""
+            style={{
+              width: "250px",
+              margin: "auto",
+              borderRadius: "10px",
+              marginBottom: "15px",
+            }}
+          />
+          <Input
+            autoFocus
+            placeholder="Set Price in ETH"
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </Modal>
+      ) : (
+        <Modal
+          title={`Transfer ${nftToSell?.name || "NFT"}`}
+          visible={visible}
+          onCancel={() => setVisibility(false)}
+          onOk={() => transfer(nftToSend, receiverToSend)}
+          confirmLoading={isPending}
+          okText="Send"
+        >
+          <img
+            src={nftToSend?.image}
+            alt=""
+            style={{
+              width: "250px",
+              margin: "auto",
+              borderRadius: "10px",
+              marginBottom: "15px",
+            }}
+          />
+          <AddressInput autoFocus placeholder="Receiver" onChange={setReceiver} />
+        </Modal>
+      )}
     </>
   );
 }

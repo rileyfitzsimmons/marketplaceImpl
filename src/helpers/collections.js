@@ -21,6 +21,14 @@ export const networkCollections = {
     },
   ],
 
+  "0x4":[
+    {
+      image: "",
+      name: "Digi Art World",
+      addrs: "0x6aa5911e4a477aa18c1a61e78370ac1272a53571",
+    },
+  ],
+
   "0x1": [
     {
       image:

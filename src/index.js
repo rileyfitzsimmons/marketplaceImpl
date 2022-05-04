@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { MoralisProvider } from "react-moralis";
 import "./index.css";
-import QuickStart from "components/QuickStart";
 import { MoralisDappProvider } from "./providers/MoralisDappProvider/MoralisDappProvider";
 
 /** Get your free Moralis Account https://moralis.io/ */
@@ -22,11 +21,6 @@ const Application = () => {
       </MoralisProvider>
     );
   else {
-    return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <QuickStart />
-      </div>
-    );
   }
 };
 
