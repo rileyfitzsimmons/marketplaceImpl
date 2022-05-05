@@ -1,4 +1,5 @@
 import logo from "../images/digiArtWorld.jpeg"
+import balloon from "../images/balloon.png"
 
 export const networkCollections = {
   "0x13881": [
@@ -28,6 +29,11 @@ export const networkCollections = {
       image: logo,
       name: "Digi Art World",
       addrs: "0x6aa5911e4a477aa18c1a61e78370ac1272a53571",
+    },
+    {
+      image: balloon,
+      name: "Balloon Hearts",
+      addrs: "0x2d7be2aea8ce13f72ae24060aa344da9a6890d39",
     },
   ],
 
