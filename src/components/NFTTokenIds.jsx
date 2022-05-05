@@ -145,9 +145,9 @@ function NFTTokenIds({ inputValue, setInputValue }) {
       provider
     );
 
-    const yer = await marketContract.getMarketItems();
+    const marketItems = await marketContract.getMarketItems();
 
-    for(let item of yer) {
+    for(let item of marketItems) {
       console.log(nft?.token_id)
       if(item.nftContract === nft?.token_address ||
         ethers.utils.formatUnits(item.tokenId,0) === nft?.token_id) {
@@ -170,8 +170,8 @@ function NFTTokenIds({ inputValue, setInputValue }) {
       provider
     );
 
-    const yer = await marketContract.getMarketItems();
-    for(let item of yer) {
+    const marketItems = await marketContract.getMarketItems();
+    for(let item of marketItems) {
       if(ethers.utils.formatUnits(item.tokenId,0) === nft?.token_id) {
            return item;
          }
