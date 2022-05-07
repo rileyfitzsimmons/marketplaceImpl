@@ -31,7 +31,6 @@ contract NFTMarket is ReentrancyGuard {
 
     mapping(uint256 => MarketItem) private idToMarketItem;
 
-    // Event is an inhertable contract that can be used to emit events
     event MarketItemCreated(
         uint256 indexed itemId,
         address indexed nftContract,
@@ -148,7 +147,7 @@ contract NFTMarket is ReentrancyGuard {
 
         for (uint256 i = 0; i < totalItemCount; i++) {
             if (idToMarketItem[i + 1].seller == msg.sender) {
-                itemCount += 1; // No dynamic length. Predefined length has to be made
+                itemCount += 1; 
             }
         }
 
