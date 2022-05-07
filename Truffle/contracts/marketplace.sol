@@ -42,6 +42,15 @@ contract NFTMarket is ReentrancyGuard {
         bool isSold
     );
 
+    /**
+     * Lists item to the marketplace by creating a new struct MarketItem
+     * @param {address} contract address for the nft
+     * @param {int} token ID of the nft
+     * @param {int} price to list at
+     * @param {string} category to list in
+     * @returns NA
+     */
+
     function createMarketItem(
         address nftContract,
         uint256 tokenId,
@@ -76,6 +85,13 @@ contract NFTMarket is ReentrancyGuard {
         );
     }
 
+    /**
+     * Lists item to the marketplace by creating a new struct MarketItem
+     * @param {address} contract address for the nft
+     * @param {int} item ID to purchase
+     * @returns NA
+     */
+
     function createMarketSale(address nftContract, uint256 itemId)
         public
         payable
@@ -100,6 +116,11 @@ contract NFTMarket is ReentrancyGuard {
         payable(owner).transfer(toMarket);
     }
 
+    /**
+     * Get's all instances of MarketItem
+     * @param NA
+     * @returns {<MarketItems>[]} all instances of MarketItem
+     */
     function getMarketItems() public view returns (MarketItem[] memory) {
         uint256 itemCount = _itemIds.current();
         uint256 unsoldItemCount = _itemIds.current() - _itemsSold.current();
@@ -117,6 +138,11 @@ contract NFTMarket is ReentrancyGuard {
         return marketItems;
     }
 
+    /**
+     * Gets list of NFT's user has bought from marketplace
+     * @param NA
+     * @returns {<MarketItems>[]} items of MarketItem with msg sender as buyer
+     */
     function fetchPurchasedNFTs() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _itemIds.current();
         uint256 itemCount = 0;
@@ -140,6 +166,11 @@ contract NFTMarket is ReentrancyGuard {
         return marketItems;
     }
 
+    /**
+     * Gets list of NFT's user has listed on marketplace
+     * @param NA
+     * @returns {<MarketItems>[]} items of MarketItem with msg sender as lister
+     */
     function fetchCreateNFTs() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _itemIds.current();
         uint256 itemCount = 0;
@@ -163,6 +194,11 @@ contract NFTMarket is ReentrancyGuard {
         return marketItems;
     }
 
+    /**
+     * Gets list of NFT's listed on the marketplace under a certain category
+     * @param {string} category to query
+     * @returns {<MarketItems>[]} items of MarketItem in that specific category
+     */
     function getItemsByCategory(string calldata category)
         public
         view
