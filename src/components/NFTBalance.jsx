@@ -6,7 +6,6 @@ import { FileSearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "./AddressInput";
-import { List } from "rc-field-form";
 const { Meta } = Card;
 
 const styles = {
@@ -148,12 +147,6 @@ function NFTBalance() {
 
     itemImage.save();
   }
-
-  const handleTransferClick = (nft) => {
-    setNftToSend(nft);
-    setVisibility(true);
-    setIsSale(false);
-  };
 
   return (
     <>

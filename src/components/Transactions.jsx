@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useMoralis, useMoralisQuery } from "react-moralis";
+import {  useMoralisQuery } from "react-moralis";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { Table, Tag, Space } from "antd";
 import moment from "moment";

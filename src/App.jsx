@@ -14,13 +14,12 @@ import NFTTokenIds from "components/NFTTokenIds";
 import NFTMarketTransactions from "components/Transactions";
 import SearchCollections from "components/SearchCollections";
 import { Menu, Layout } from "antd";
-import newtworkCollections from "helpers/collections";
 import "antd/dist/antd.css";
 import NativeBalance from "components/NativeBalance";
 import "./style.css";
 import Text from "antd/lib/typography/Text";
 import logo from "./images/digiArtWorld.jpeg";
-const { Header, Footer } = Layout;
+const { Header } = Layout;
 
 const styles = {
   content: {
