@@ -21,6 +21,12 @@ const styles = {
   },
 };
 
+/**
+ * Displays balance of NFT's in user's wallet
+ * @param NA
+ * @returns {*} JSX Elemenet
+ */
+
 function NFTBalance() {
   const { NFTBalance } = useNFTBalance();
   const { chainId, marketAddress, contractABI } = useMoralisDapp();
@@ -38,6 +44,11 @@ function NFTBalance() {
   const approveABI = '[{ "inputs": [ { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "tokenId", "type": "uint256" } ], "name": "approve", "outputs": [], "stateMutability": "nonpayable", "type": "function" }]'
   const approveABIJson = JSON.parse(approveABI);
 
+  /**
+   * Approves an NFT ono chain to be transferred
+   * @param {*} nft item
+   * @returns NA
+   */
   async function approve(nft) {
     const ops = {
       contractAddress: nft.token_address,
@@ -61,9 +72,13 @@ function NFTBalance() {
     });
   }
 
+  /**
+   * Submits transaction to list an NFT to the marketplace 
+   * @param {*} nft item
+   * @param {string} price of the NFT
+   * @returns NA
+   */
   async function list(nft, currentPrice) {
-    // const cont = await approve(nft);
-    // if(!cont) return;
     const p = currentPrice * ("1e" + 18);
     const ops = {
       contractAddress: marketAddress,
@@ -89,6 +104,12 @@ function NFTBalance() {
     });
   }
 
+  /**
+   * Submits transaction to transfer an NFT
+   * @param {*} nft item
+   * @param {string} address to send nft to
+   * @returns {*} JSX Elemenet
+   */
   async function transfer(nft, receiver) {
     console.log(nft);
     const options = {

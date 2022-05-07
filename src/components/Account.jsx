@@ -24,6 +24,12 @@ const styles = {
   },
 };
 
+/**
+ * Authentictes a users wallet by having them submit a signature from Metamask
+ * @param NA
+ * @returns {*} JSX Elemenet
+ */
+
 function Account() {
   const { authenticate, isAuthenticated, logout } = useMoralis();
   const { walletAddress, chainId } = useMoralisDapp();

@@ -1,29 +1,13 @@
 import logo from "../images/digiArtWorld.jpeg"
 import balloon from "../images/balloon.png"
 
-export const networkCollections = {
-  "0x13881": [
-    //Add Your Collections here
-    {
-      image:
-        "https://lh3.googleusercontent.com/BWCni9INm--eqCK800BbRkL10zGyflxfPwTHt4XphMSWG3XZvPx1JyGdfU9vSor8K046DJg-Q8Y4ioUlWHiCZqgR_L00w4vcbA-w=s0",
-      name: "Test Mages",
-      addrs: "0x275d553f426355c20b134D944B5b28D31CDb83DA",
-    },
-    {
-      image:
-        "https://ipfs.moralis.io:2053/ipfs/QmfLbpeVHxReWKNLaXTPcWiafi49eoAL4gRwMGuXtx2Eqe/images/14.png",
-      name: "Pixel Show",
-      addrs: "0xCA34404dD8Bd6537BE76F3A51B379F8949bD7973",
-    },
-    {
-      image:
-        "https://pbs.twimg.com/profile_images/1440166576771112974/auAF3gZK_400x400.png",
-      name: "FANTASMAS NFT ART",
-      addrs: "0x2953399124F0cBB46d2CbACD8A89cF0599974963",
-    },
-  ],
+// Add collections here; make sure they are on the correct network
 
+
+export const networkCollections = {
+  /*
+   * Rinkeby Testnet
+   */
   "0x4":[
     {
       image: logo,
@@ -37,6 +21,9 @@ export const networkCollections = {
     },
   ],
 
+  /*
+   * Ethereum
+   */
   "0x1": [
     {
       image:

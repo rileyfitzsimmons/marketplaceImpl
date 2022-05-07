@@ -3,7 +3,7 @@ import { useMoralis, useMoralisQuery } from "react-moralis";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { Table, Tag, Space } from "antd";
 import moment from "moment";
-import { PolygonCurrency } from "./Chains/Logos";
+import { ETHLogo } from "./Chains/Logos";
 
 const styles = {
   table: {
@@ -12,6 +12,11 @@ const styles = {
   },
 };
 
+/**
+ * Get's list of transactions which have occured on the marketplace
+ * @param NA
+ * @returns {*} JSX Elemenet
+ */
 function NFTMarketTransactions() {
   const { walletAddress } = useMoralisDapp();
   const queryItemImages = useMoralisQuery("ItemImages");
@@ -129,7 +134,7 @@ function NFTMarketTransactions() {
       key: "price",
       render: (e) => (
         <Space size="middle">
-          <PolygonCurrency />
+          <ETHLogo />
           <span>{e}</span>
         </Space>
       ),

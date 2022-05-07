@@ -2,6 +2,12 @@ import { Select } from "antd";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getCollectionsByChain } from "helpers/collections";
 
+  /**
+   * Add's collections available on explore page to the search bar
+   * @param NA
+   * @returns {*} JSX Elemenet
+   */
+
 function SearchCollections({ setInputValue }) {
   const { Option } = Select;
   const { chainId } = useMoralisDapp();

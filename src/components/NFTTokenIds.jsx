@@ -29,6 +29,12 @@ const styles = {
   },
 };
 
+/**
+ * Displays all token ID's of an nft from helpers > collection.js
+ * @param NA
+ * @returns {*} JSX Elemenet
+ */
+
 function NFTTokenIds({ inputValue, setInputValue }) {
   const { NFTTokenIds } = useNFTTokenIds(inputValue);
   const { chainId, contractABI, marketAddress, walletAdress } =
@@ -58,6 +64,11 @@ function NFTTokenIds({ inputValue, setInputValue }) {
     ])
   );
 
+  /**
+   * Submits transaction to purchase an NFT from our marketplace
+   * @param NA
+   * @returns NA
+   */
   async function purchase() {
     const tokenDetails = await getBuyData(nftToBuy);
     const itemID = tokenDetails.itemId;
@@ -77,40 +88,22 @@ function NFTTokenIds({ inputValue, setInputValue }) {
 
     const options = {value: tokenPrice}
     const tx = await marketContract.createMarketSale(nftToBuy.token_address, itemID, options);
-
-    // const ops = {
-    //   contractAddress: marketAddress,
-    //   functionName: purchaseItemFunction,
-    //   abi: contractABI,
-    //   params: {
-    //     nftContract: nftToBuy.token_address,
-    //     itemId: itemID,
-    //   },
-    //   msgValue: tokenPrice,
-    // };
-
-    // await contractProcessor.fetch({
-    //   params: ops,
-    //   onSuccess: () => {
-    //     alert("NFT bought");
-    //   },
-    //   onError: (error) => {
-    //     alert(error);
-    //   },
-    // });
+    console.log(tx);
   }
 
-  async function transfer(nft, amount, receiver) {
+  /**
+   * Submits transaction to transfer an NFT
+   * @param {*} nft item
+   * @param {string} address to send nft to
+   * @returns {*} JSX Elemenet
+   */
+  async function transfer(nft, receiver) {
     const options = {
       type: nft.contract_type,
       tokenId: nft.token_id,
       receiver: receiver,
       contractAddress: nft.token_address,
     };
-
-    if (options.type === "erc1155") {
-      options.amount = amount;
-    }
 
     setIsPending(true);
     await Moralis.transfer(options)
@@ -124,15 +117,16 @@ function NFTTokenIds({ inputValue, setInputValue }) {
       });
   }
 
-  //   const handleTransferClick = (nft) => {
-  //     setNftToSend(nft);
-  //     setVisibility(true);
-  //   };
-
   const handleBuyClick = (nft) => {
     setNftToBuy(nft);
     setVisibility(true);
   };
+
+    /**
+   * Get's data from our marketplpace to display Buy button if an NFT is on our matkeplace
+   * @param {*} nft item
+   * @returns {boolean} indicates if item is available for sale or not
+   */
 
   async function getData(nft) {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -159,6 +153,11 @@ function NFTTokenIds({ inputValue, setInputValue }) {
     return false;
   }
 
+    /**
+   * Get's information on an item listed for sale in our marketplace contract
+   * @param {*} nft item
+   * @returns {<marketItem>[]} array of MarketItem struct from contract
+   */
   async function getBuyData(nft) {
     const provider = new ethers.providers.JsonRpcProvider(
       'https://speedy-nodes-nyc.moralis.io/74bc5da2f2b08db9a7b1b167/eth/rinkeby'

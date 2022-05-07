@@ -3,7 +3,11 @@ import useChain from "hooks/useChain";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo } from "./Logos";
+import { AvaxLogo, BSCLogo, ETHLogo } from "./Logos";
+
+/*
+ * Show's chains available to switch to.
+ */
 
 const styles = {
   item: {
@@ -63,21 +67,17 @@ const menuItems = [
   //   icon: <BSCLogo />,
   // },
   // {
-  //   key: "0x89",
-  //   value: "Polygon",
-  //   icon: <PolygonLogo />,
-  // },
-  // {
-  //   key: "0x13881",
-  //   value: "Mumbai",
-  //   icon: <PolygonLogo />,
-  // },
-  // {
   //   key: "0xa86a",
   //   value: "Avalanche",
   //   icon: <AvaxLogo />,
   // },
 ];
+
+/**
+ * Switches the Metamask network to the selected chain
+ * @param NA
+ * @returns {*} JSX Elemenet
+ */
 
 function Chains() {
   const { switchNetwork } = useChain();

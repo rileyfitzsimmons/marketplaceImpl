@@ -4,6 +4,12 @@ import Blockie from "./Blockie";
 import { Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
+/**
+ * Used to verify that an address inputted is an actual ETH address
+ * @param {*} props
+ * @returns {*} JSX element
+ */
+
 function AddressInput(props) {
   const [address, setAddress] = useState("");
   const [validatedAddress, setValidatedAddress] = useState("");
